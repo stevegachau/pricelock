@@ -57,13 +57,13 @@ The contract is ready and we check its existence on some [Ethereum blockchain ex
 web3.eth.getBalance(web3.eth.accounts[0])
 ```
 
-Interaction with the contract happens via transactions, here we are locking 123 Wei ([0.000000000000000123 Ether or 0.00000000000000002583 USD](http://ether.fund/tool/converter) as of the time of this writing) from account 0 for 100 seconds:
+Interaction with the contract happens via transactions, here we are locking 0.001 Wei from account 0 for 1 day (86400 seconds) or until the ETH/USD price crosses $350:
 
 ```
-contractInstance.payIn.sendTransaction(100, {from: web3.eth.accounts[0], value:123})
+contractInstance.payIn.sendTransaction(86400, 350000000, {from: web3.eth.accounts[0], value:1000000000000000})
 ```
 
-Checking the balance again should show a difference in value, note that not only the 123 Wei but also the gas to run this contract were subtracted from the balance of this account:
+Checking the balance again should show a difference in value, note that not only the 0.001 Eth but also the gas to run this contract were subtracted from the balance of this account:
 
 ```
 web3.eth.getBalance(web3.eth.accounts[0])
@@ -75,7 +75,11 @@ Also, the amount locked in the contract can be checked:
 contractInstance.getMyLockedFunds()
 ```
 
-After waiting the initially specified lock time (here 100 seconds), the funds can be unlocked and transferred back to the requesters account:
+The funds can be unlocked if either one of 2 conditions is met. 
+
+Condition 1. After the ETH/USD price crosses the specified threshold
+
+Condition 2. After waiting the initially specified lock time (here 1 day [86400 seconds])
 
 ```
 contractInstance.payOut.sendTransaction({from: web3.eth.accounts[0], gas: 1000000})
